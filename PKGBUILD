@@ -10,11 +10,11 @@ pkgdesc="A distributed monitoring/graphing tool"
 arch=('any')
 url="http://munin-monitoring.org/"
 license=("GPL")
-makedepends=('perl' 'rrdtool' 'perl-log-log4perl' 'perl-html-template'
+makedepends=('perl' 'perl-log-log4perl' 'perl-html-template'
              'perl-date-manip' 'perl-io-socket-inet6' 'perl-net-snmp'
              'perl-net-ssleay' 'perl-net-server' 'perl-file-copy-recursive'
              'perl-fcgi' 'perl-uri')
-source=(http://downloads.sourceforge.net/sourceforge/munin/munin-$pkgver.tar.gz
+source=(munin-git::git+ssh://git@github.com/InsanePrawn/munin.git
         Makefile.config
         munin-cron-entry
         logrotate.munin
@@ -27,7 +27,7 @@ source=(http://downloads.sourceforge.net/sourceforge/munin/munin-$pkgver.tar.gz
         08-munin-font-dir.conf)
 
 build() { 
-	cd "$srcdir/munin-$pkgver"
+	cd "$srcdir/munin"
 
 	sed -i -e 's#/sbin/ip6tables#/usr/sbin/ip6tables#' plugins/node.d.linux/ip_.in
 
@@ -76,7 +76,7 @@ package_munin-node() {
 	chmod 775 "$pkgdir/var/lib/munin/plugin-state"
 }
 
-md5sums=('b418a667ce42665557329a7ac3bd1b93'
+md5sums=('SKIP'
          'fb3cc403e298ae6b73c280c4d3af7b49'
          'dc9c83aa2a278466fb475364462f4119'
          'eb2f1e6e746e85ce1e91111f40086be0'
