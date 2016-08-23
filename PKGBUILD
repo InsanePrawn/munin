@@ -82,7 +82,7 @@ package_munin-node-git() {
 }
 
 md5sums=('SKIP'
-         'fb3cc403e298ae6b73c280c4d3af7b49'
+         'fd52ce79bab31e03bb71c3570d5152b4'
          'dc9c83aa2a278466fb475364462f4119'
          'eb2f1e6e746e85ce1e91111f40086be0'
          'cdf139f2b6ae36852113f3411caa6e99'
