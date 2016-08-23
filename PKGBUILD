@@ -29,7 +29,7 @@ source=(munin-git::git+ssh://git@github.com/InsanePrawn/munin.git
 build() { 
 	cd "$srcdir/munin"
 
-	sed -i -e 's#/sbin/ip6tables#/usr/sbin/ip6tables#' plugins/node.d.linux/ip_.in
+	sed -i -e 's#/sbin/ip6tables#/usr/sbin/ip6tables#' plugins/node.d.linux/ip_
 
 	cp ../Makefile.config .
 	# multithreading wrecks havoc on the build, should probably report this
