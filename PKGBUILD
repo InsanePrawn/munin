@@ -2,19 +2,19 @@
 # Maintainer: Dan McGee <dan@archlinux.org>
 # Contributor: Evan LeCompte <evanlec@gmail.com>
 
-pkgname=('munin' 'munin-node')
+pkgname=('munin-git' 'munin-node-git')
 pkgbase=munin
-pkgver=2.0.25
 pkgrel=1
+pkgver=2.999.2.r131.g0679e45
 pkgdesc="A distributed monitoring/graphing tool"
 arch=('any')
 url="http://munin-monitoring.org/"
 license=("GPL")
-makedepends=('perl' 'perl-log-log4perl' 'perl-html-template'
+makedepends=('git' 'perl' 'perl-log-log4perl' 'perl-html-template'
              'perl-date-manip' 'perl-io-socket-inet6' 'perl-net-snmp'
              'perl-net-ssleay' 'perl-net-server' 'perl-file-copy-recursive'
              'perl-fcgi' 'perl-uri')
-source=(munin-git::git+ssh://git@github.com/InsanePrawn/munin.git
+source=('munin-git::git+ssh://git@github.com/InsanePrawn/munin.git#branch=patch-1'
         Makefile.config
         munin-cron-entry
         logrotate.munin
@@ -26,8 +26,13 @@ source=(munin-git::git+ssh://git@github.com/InsanePrawn/munin.git
         munin-html.{service,socket}
         08-munin-font-dir.conf)
 
+pkgver() {
+  cd "munin-git"
+  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
 build() { 
-	cd "$srcdir/munin"
+	cd "$srcdir/munin-git"
 
 	sed -i -e 's#/sbin/ip6tables#/usr/sbin/ip6tables#' plugins/node.d.linux/ip_
 
@@ -36,14 +41,14 @@ build() {
 	make -j1 PREFIX=''
 }
 
-package_munin() {
+package_munin-git() {
 	depends=('perl' 'rrdtool' 'perl-html-template' 'perl-date-manip'
              'perl-log-log4perl' 'perl-io-socket-inet6'
              'perl-file-copy-recursive' 'perl-fcgi' 'perl-uri' 'munin-node')
 	backup=(etc/munin/munin.conf etc/logrotate.d/munin)
 	install=munin.install
-
-	cd "$srcdir/munin-$pkgver"
+	provides=('munin')
+	cd "$srcdir/munin-git"
 	make DESTDIR="$pkgdir" install-master-prime
 	install -D -m644 ../munin-cron-entry "$pkgdir"/etc/munin/munin-cron-entry
 	install -D -m644 ../logrotate.munin "$pkgdir"/etc/logrotate.d/munin
@@ -56,7 +61,7 @@ package_munin() {
 	rm -rf "$pkgdir/run"
 }
 
-package_munin-node() {
+package_munin-node-git() {
 	depends=('perl' 'perl-net-server' 'perl-io-socket-inet6')
 	optdepends=('perl-net-snmp: for SNMP plugins'
 	            'perl-net-ssleay: for SSL/TLS support'
@@ -65,8 +70,8 @@ package_munin-node() {
 	            'ruby: for some plugins')
 	backup=(etc/munin/munin-node.conf etc/logrotate.d/munin-node)
 	install=munin-node.install
-
-	cd "$srcdir/munin-$pkgver"
+	provides=('munin-node')
+	cd "$srcdir/munin-git"
 	make DESTDIR="$pkgdir" install-common-prime install-node-prime install-plugins-prime install-async-prime
 	install -D -m644 ../logrotate.munin-node "$pkgdir"/etc/logrotate.d/munin-node
 	install -D -m644 ../munin.tmpfiles.conf "$pkgdir"/usr/lib/tmpfiles.d/munin-node.conf
