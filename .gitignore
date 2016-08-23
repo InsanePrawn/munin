@@ -32,3 +32,8 @@ local/
 # CSS SASS files
 *.sass-cache*
 *.css.map
+
+# makepkg
+pkg/
+src/
+munin-git
